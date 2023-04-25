@@ -1,5 +1,5 @@
 {
-    "name": "elephantio/elephant.io",
+    "name": "aguetkriegerisch/elephant.io",
     "type": "library",
     "description": "Send events to a real time websocket engine through PHP",
     "keywords": ["Nodejs", "WebSocket", "Dialog", "Real Time"],

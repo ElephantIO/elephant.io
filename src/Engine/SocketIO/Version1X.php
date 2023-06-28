@@ -297,7 +297,14 @@ class Version1X extends AbstractSocketIO
 
             switch ($packet->proto) {
                 case static::PROTO_MESSAGE:
-                    if (null !== ($data = json_decode($seq->getData(), true))) {
+                    $data = $seq->getData();
+                    // make sure it really is valid JSON
+                    preg_match('#\{(?:[^{}]|(?R))*\}#s', $data, $matches);
+                    if(\count($matches) && $matches[0]){
+                        $data = $matches[0];
+                    }
+
+                    if (null !== ($data = json_decode($data, true))) {
                         switch ($packet->type) {
                             case static::PACKET_EVENT:
                                 $packet->event = array_shift($data);

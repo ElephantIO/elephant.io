@@ -456,6 +456,14 @@ class Version1X extends AbstractSocketIO
         ]);
         $payload = static::PROTO_MESSAGE . static::PACKET_CONNECT;
 
+        if ($this->options['auth']) {
+            $encodedAuthPayload = json_encode($this->options['auth']);
+            if ($encodedAuthPayload === false) {
+                throw new Exception('Can\'t parse auth option to JSON: ' . json_last_error_msg());
+            }
+            $payload .= $encodedAuthPayload;
+        }
+
         $this->stream->request($uri, ['Connection: close'], ['method' => 'POST', 'payload' => $payload]);
         if ($this->stream->getStatusCode() != 200) {
             throw new ServerConnectionFailureException('unable to perform namespace request');

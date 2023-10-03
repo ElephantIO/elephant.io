@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/MIT-License MIT License
  */
 
-use ElephantIO\Client;;
+use ElephantIO\Client;
 
 use ElephantIO\Exception\ServerConnectionFailureException;
 use Monolog\Logger;

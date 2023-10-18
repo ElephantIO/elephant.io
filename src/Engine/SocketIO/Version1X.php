@@ -456,7 +456,7 @@ class Version1X extends AbstractSocketIO
         ]);
         $payload = static::PROTO_MESSAGE . static::PACKET_CONNECT . $this->getAuthPayload();
 
-        $this->stream->request($uri, ['Connection: close'], ['method' => 'POST', 'payload' => $payload]);
+        $this->stream->request($uri, ['Connection' => 'close'], ['method' => 'POST', 'payload' => $payload]);
         if ($this->stream->getStatusCode() != 200) {
             throw new ServerConnectionFailureException('unable to perform namespace request');
         }
@@ -466,7 +466,7 @@ class Version1X extends AbstractSocketIO
 
     protected function getAuthPayload($namespace = '/')
     {
-        if (!$this->options['auth'] || $this->options['version'] < 4) {
+        if (!isset($this->options['auth']) || !$this->options['auth'] || $this->options['version'] < 4) {
             return '';
         }
 
@@ -499,7 +499,7 @@ class Version1X extends AbstractSocketIO
         ]);
 
         $sid = null;
-        $this->stream->request($uri, ['Connection: close']);
+        $this->stream->request($uri, ['Connection' => 'close']);
         if (($packet = $this->decodePacket($this->stream->getBody())) && $packet->data && isset($packet->data['sid'])) {
             $sid = $packet->data['sid'];
         }
@@ -534,7 +534,7 @@ class Version1X extends AbstractSocketIO
         }
         $uri = $this->getUri($query);
 
-        $this->stream->request($uri, ['Connection: close']);
+        $this->stream->request($uri, ['Connection' => 'close']);
         if ($this->stream->getStatusCode() != 200) {
             throw new ServerConnectionFailureException('unable to perform handshake');
         }
@@ -628,28 +628,20 @@ class Version1X extends AbstractSocketIO
 
         $key = base64_encode($hash);
 
-        $origin = '*';
-        $headers = isset($this->context['headers']) ? (array) $this->context['headers'] : [];
-
-        foreach ($headers as $header) {
-            $matches = [];
-            if (preg_match('`^Origin:\s*(.+?)$`', $header, $matches)) {
-                $origin = $matches[1];
-                break;
-            }
-        }
+        $origin = $this->context['headers']['Origin'] ?? '*';
 
         $headers = [
-            'Upgrade: websocket',
-            'Connection: Upgrade',
-            sprintf('Sec-WebSocket-Key: %s', $key),
-            'Sec-WebSocket-Version: 13',
-            sprintf('Origin: %s', $origin),
+            'Upgrade' => 'websocket',
+            'Connection' => 'Upgrade',
+            'Sec-WebSocket-Key' => $key,
+            'Sec-WebSocket-Version' => '13',
+            'Origin' => $origin,
         ];
 
         if (!empty($this->cookies)) {
-            $headers[] = sprintf('Cookie: %s', implode('; ', $this->cookies));
+            $headers['Cookie'] = implode('; ', $this->cookies);
         }
+
         $this->stream->request($uri, $headers, ['skip_body' => true]);
         if ($this->stream->getStatusCode() != 101) {
             throw new ServerConnectionFailureException('unable to upgrade to WebSocket');

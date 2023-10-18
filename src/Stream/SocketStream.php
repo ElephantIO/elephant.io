@@ -91,8 +91,18 @@ class SocketStream extends AbstractStream
         if (!isset($this->options['persistent']) || $this->options['persistent']) {
             $flags |= STREAM_CLIENT_PERSISTENT;
         }
+
+        $context = !isset($this->context['headers']) ? $this->context : array_merge(
+            $this->context,
+            ['headers' => array_map(
+                function($key, $value) { return "$key: $value"; },
+                array_keys($this->context['headers']),
+                $this->context['headers'])
+            ]
+        );
+
         $this->handle = @stream_socket_client($address, $errors[0], $errors[1], $timeout, $flags,
-            stream_context_create($this->context));
+            stream_context_create($context));
 
         if (is_resource($this->handle)) {
             stream_set_timeout($this->handle, $timeout);
@@ -167,28 +177,23 @@ class SocketStream extends AbstractStream
         $payload    = isset($options['payload']) ? $options['payload'] : null;
 
         if ($payload) {
-            $contentType = null;
-            foreach ($headers as $header) {
-                if (substr($header, 0, 13) === 'Content-type:') {
-                    $contentType = $header;
-                    break;
-                }
-            }
+            $contentType = $headers['Content-type'] ?? null;
+
             if (null === $contentType) {
                 $payload = utf8_encode($payload);
-                $headers[] = 'Content-type: text/plain;charset=UTF-8';
-                $headers[] = 'Content-Length: ' . strlen($payload);
+                $headers['Content-type'] = 'text/plain;charset=UTF-8';
+                $headers['Content-Length'] = strlen($payload);
             }
         }
 
+        $headers['Host'] = $this->url->getHost();
         if(isset($this->options['headers'])){
             $headers = array_merge($headers, $this->options['headers']);
         }
-
         $request = array_merge([
             sprintf('%s %s HTTP/1.1', strtoupper($method), $uri),
-            sprintf('Host: %s', $this->url->getHost()),
-        ], $headers);
+        ], array_map(function($key, $value) { return "$key: $value"; }, array_keys($headers), $headers));
+
         $request = implode(static::EOL, $request) . static::EOL . static::EOL . $payload;
 
         $this->write($request);

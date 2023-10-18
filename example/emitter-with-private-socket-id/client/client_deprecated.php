@@ -31,12 +31,13 @@ $logger = new Logger('client');
 $logger->pushHandler(new StreamHandler($logfile, Logger::DEBUG));
 
 echo sprintf("Creating first socket to %s\n", $url);
+
 // create first instance
 $client = new Client(Client::engine($version, $url, [
     'headers' => [
-        'X-My-Header' => 'websocket rocks',
-        'Authorization' => 'Bearer ' . $token,
-        'User' => 'peter',
+        'X-My-Header: websocket rocks',
+        'Authorization: Bearer ' . $token,
+        'User: peter',
     ]
 ]), $logger);
 $client->initialize();
@@ -56,9 +57,9 @@ $client->close();
 echo sprintf("Creating second socket to %s\n", $url);
 $client = new Client(Client::engine($version, $url, [
     'headers' => [
-        'X-My-Header' => 'websocket rocks',
-        'Authorization' => 'Bearer ' . $token,
-        'User' => 'peter',
+        'X-My-Header: websocket rocks',
+        'Authorization: Bearer ' . $token,
+        'User: peter',
     ]
 ]), $logger);
 $client->initialize();

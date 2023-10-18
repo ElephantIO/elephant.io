@@ -61,6 +61,14 @@ abstract class AbstractSocketIO implements EngineInterface
     {
         $this->url = $url;
 
+        if (isset($options['headers'])) {
+            $this->handleDeprecatedHeaderOptions($options['headers']);
+        }
+
+        if (isset($options['context']['headers'])) {
+            $this->handleDeprecatedHeaderOptions($options['context']['headers']);
+        }
+
         if (isset($options['context'])) {
             $this->context = $options['context'];
             unset($options['context']);
@@ -266,6 +274,34 @@ abstract class AbstractSocketIO implements EngineInterface
     public function getName()
     {
         return 'SocketIO';
+    }
+
+    /**
+     * Handles deprecated header options in an array
+     *
+     * This function checks the format of the provided array of headers. If the headers are in the old
+     * non-associative format (numeric indexed), it triggers a deprecated warning and converts them
+     * to the new key-value array format.
+     *
+     * @param array $headers A reference to the array of HTTP headers to be processed. This array may
+     *                      be modified if the headers are in the deprecated format.
+     *
+     * @return void This function modifies the input array in place and does not return any value.
+     */
+    protected function handleDeprecatedHeaderOptions(&$headers)
+    {
+        if (is_array($headers) && count($headers) > 0) {
+            // Check if the array is not associative (indicating old format)
+            if (array_values($headers) == $headers) {
+                trigger_error('You are using a deprecated header format. Please update to the new key-value array format.', E_USER_DEPRECATED);
+                $newHeaders = [];
+                foreach ($headers as $header) {
+                    list($key, $value) = explode(': ', $header, 2);
+                    $newHeaders[$key] = $value;
+                }
+                $headers = $newHeaders; // Convert to new format
+            }
+        }
     }
 
     /**

@@ -188,7 +188,7 @@ class Version0X extends AbstractSocketIO
             $uri .= '/?' . http_build_query($url['query']);
         }
 
-        $this->stream->request($uri, ['Connection: close']);
+        $this->stream->request($uri, ['Connection' => 'close']);
         if ($this->stream->getStatusCode() != 200) {
             throw new ServerConnectionFailureException('unable to perform handshake');
         }
@@ -236,27 +236,18 @@ class Version0X extends AbstractSocketIO
 
         $key = \base64_encode(\sha1(\uniqid(\mt_rand(), true), true));
 
-        $origin = '*';
-        $headers = isset($this->context['headers']) ? (array) $this->context['headers'] : [] ;
-
-        foreach ($headers as $header) {
-            $matches = [];
-            if (\preg_match('`^Origin:\s*(.+?)$`', $header, $matches)) {
-                $origin = $matches[1];
-                break;
-            }
-        }
+        $origin = $this->context['headers']['Origin'] ?? '*';
 
         $headers = [
-            'Upgrade: WebSocket',
-            'Connection: Upgrade',
-            sprintf('Sec-WebSocket-Key: %s', $key),
-            'Sec-WebSocket-Version: 13',
-            sprintf('Origin: %s', $origin),
+            'Upgrade' => 'WebSocket',
+            'Connection' => 'Upgrade',
+            'Sec-WebSocket-Key' => $key,
+            'Sec-WebSocket-Version' => '13',
+            'Origin' => $origin,
         ];
 
         if (!empty($this->cookies)) {
-            $headers[] = sprintf('Cookie: %s', implode('; ', $this->cookies));
+            $headers['Cookie'] = implode('; ', $this->cookies);
         }
         $this->stream->request($uri, $headers, ['skip_body' => true]);
         if ($this->stream->getStatusCode() != 101) {

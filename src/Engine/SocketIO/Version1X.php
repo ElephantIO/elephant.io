@@ -337,6 +337,7 @@ class Version1X extends AbstractSocketIO
         $proto = (int) $seq->read();
         if ($proto >= static::PROTO_OPEN && $proto <= static::PROTO_NOOP) {
             $packet = new stdClass();
+            $packet->data = null;
             $packet->proto = $proto;
             $packet->type = (int) $seq->read();
             if ($packet->type === static::PACKET_BINARY_EVENT) {

@@ -104,7 +104,7 @@ class SocketStream extends AbstractStream
         );
 
         $this->handle = @stream_socket_client(
-            $address,
+            sprintf('%s/%s', $address, uniqid()),
             $errors[0],
             $errors[1],
             $timeout,

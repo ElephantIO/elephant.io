@@ -82,7 +82,7 @@ class Decoder extends AbstractPayload implements Countable
         $this->data = $data;
     }
 
-    public function count()
+    public function count(): int
     {
         if (null === $this->payload) {
             return 0;

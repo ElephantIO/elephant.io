@@ -100,7 +100,7 @@ class Version1X extends SocketIO
                     if (null === $bindata) {
                         throw new RuntimeException(sprintf('Binary data unavailable for index %d!', $i));
                     }
-                    $this->replaceAttachment($packet->data, $i, $bindata);
+                    $packet->data = $this->replaceAttachment($packet->data, $i, $bindata);
                 }
             }
             switch ($packet->proto) {
@@ -362,8 +362,9 @@ class Version1X extends SocketIO
      * @param array $array
      * @param int $index
      * @param string $data
+     * @return array
      */
-    protected function replaceAttachment(&$array, $index, $data)
+    protected function replaceAttachment($array, $index, $data)
     {
         if (is_array($array)) {
             foreach ($array as $key => &$value) {
@@ -376,11 +377,12 @@ class Version1X extends SocketIO
                         }
                         $this->logger->debug(sprintf('Replacing binary attachment for %d (%s)', $index, $key));
                     } else {
-                        $this->replaceAttachment($value, $index, $data);
+                        $value = $this->replaceAttachment($value, $index, $data);
                     }
                 }
             }
         }
+        return $array;
     }
 
     /**

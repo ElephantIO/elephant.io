@@ -185,14 +185,14 @@ class Store
      *
      * @param string $key
      * @param mixed $value
-     * @return \ElephantIO\Engine\Store
+     * @return void
      */
     public function __set($key, $value)
     {
         $key = $this->getKey($key);
         $this->values[$key] = $value;
+    }
 
-        return $this;
     }
 
     public function __toString()

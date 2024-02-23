@@ -34,6 +34,13 @@ class Store
     protected $keys = [];
 
     /**
+     * Store values.
+     *
+     * @var mixed[]
+     */
+    protected $values = [];
+
+    /**
      * Key flags.
      *
      * @var string[]
@@ -137,7 +144,7 @@ class Store
         $result = [];
         foreach ($this->keys as $key) {
             $key = $this->getNormalizedKey($key);
-            if (isset($this->$key)) {
+            if (isset($this->values[$key])) {
                 $result[$key] = $this->$key;
             }
         }
@@ -170,7 +177,7 @@ class Store
     {
         $key = $this->getKey($key);
 
-        return isset($this->$key) ? $this->$key : null;
+        return isset($this->values[$key]) ? $this->values[$key] : null;
     }
 
     /**
@@ -183,7 +190,7 @@ class Store
     public function __set($key, $value)
     {
         $key = $this->getKey($key);
-        $this->$key = $value;
+        $this->values[$key] = $value;
 
         return $this;
     }
@@ -203,7 +210,7 @@ class Store
                     $title = $this->getMappedValue($key, $this->$key);
                     break;
                 default:
-                    if (isset($this->$key)) {
+                    if (isset($this->values[$key])) {
                         $value = $this->getMappedValue($key, $this->$key);
                         if (null !== $value && ($flag !== '!' || null === $xclusive)) {
                             $items[$key] = $value;

@@ -58,10 +58,9 @@ class Packet extends Store
     {
         $result = [];
         $result[] = $this;
-        if (isset($this->next)) {
-            foreach ($this->next as $p) {
-                $result = array_merge($result, $p->flatten());
-            }
+
+        foreach ((array) $this->next as $p) {
+            $result = array_merge($result, $p->flatten());
         }
 
         return $result;
@@ -90,10 +89,11 @@ class Packet extends Store
      */
     public function add($packet)
     {
-        if (!isset($this->next)) {
-            $this->next = [];
+        if (!$this->next) {
+            $this->next = [$packet];
+        } else {
+            $this->next = array_merge($this->next, [$packet]);
         }
-        $this->next[] = $packet;
 
         return $this;
     }

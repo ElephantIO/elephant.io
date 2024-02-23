@@ -193,6 +193,17 @@ class Store
         $this->values[$key] = $value;
     }
 
+    /**
+     * Check if key exists.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        $key = $this->getKey($key);
+
+        return isset($this->values[$key]);
     }
 
     public function __toString()

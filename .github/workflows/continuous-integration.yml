@@ -61,6 +61,8 @@ jobs:
 
     - name: Run examples
       run: |
+        PHP_VERSION_SUFFIX=$(echo "${{ matrix.php-version }}" | tr -d '.') # Remove dots from PHP version
+        export PORT=140$PHP_VERSION_SUFFIX # Assign a unique port for each PHP version
         cd example/server && node index.js &
         sleep 5
         cd example/client

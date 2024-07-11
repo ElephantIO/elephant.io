@@ -14,7 +14,7 @@ const server = require('http').createServer();
 const socketio = require('socket.io');
 const io = typeof socketio === 'function' ? socketio(server) : socketio.listen(server);
 
-const port = 14000;
+const port = Number(process.env.PORT) || 14000;
 const dir = __dirname;
 
 console.log('Please wait, running servers...');

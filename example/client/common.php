@@ -79,7 +79,7 @@ function setup_logger()
  */
 function setup_client($namespace, $logger = null, $options = [])
 {
-    $url = 'http://localhost:' . (getenv('PORT') ?: 14000);
+    $url = 'http://localhost:14000';
     if (isset($options['url'])) {
         $url = $options['url'];
         unset($options['url']);

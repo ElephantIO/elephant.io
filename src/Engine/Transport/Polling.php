@@ -170,7 +170,7 @@ class Polling extends Transport
                                     $this->result['status'] = [$matches['HTTP'], (int) $matches['CODE'], $matches['STATUS']];
                                 }
                             } else {
-                                list($key, $value) = explode(':', $content, 2);
+                                [$key, $value] = explode(':', $content, 2);
                                 $value = trim($value);
                                 if (null === $len &&
                                     strtolower($key) === 'content-length') {

@@ -65,7 +65,7 @@ class SequenceReader
     public function readUntil($delimiter = ',', $noskips = [])
     {
         if (!$this->isEof()) {
-            list($p, $d) = $this->getPos($this->data, $delimiter);
+            [$p, $d] = $this->getPos($this->data, $delimiter);
             if (false !== $p) {
                 $result = mb_substr($this->data, 0, $p);
                 // skip delimiter
@@ -89,7 +89,7 @@ class SequenceReader
     public function readWithin($delimiter = ',', $boundaries = [])
     {
         if (!$this->isEof()) {
-            list($p, $d) = $this->getPos($this->data, implode(array_merge([$delimiter], $boundaries)));
+            [$p, $d] = $this->getPos($this->data, implode(array_merge([$delimiter], $boundaries)));
             if (false !== $p && $d === $delimiter) {
                 $result = mb_substr($this->data, 0, $p);
                 $this->data = mb_substr($this->data, $p + mb_strlen($d));
@@ -107,7 +107,7 @@ class SequenceReader
      */
     public function getDelimited($delimiter)
     {
-        list($pos, ) = $this->getPos($this->data, $delimiter);
+        [$pos,] = $this->getPos($this->data, $delimiter);
 
         return $pos;
     }

@@ -131,7 +131,7 @@ class Version0X extends SocketIO
                     }
                     break;
                 case static::PROTO_ACK:
-                    list($ack, $data) = explode('+', $packet->data, 2);
+                    [$ack, $data] = explode('+', $packet->data, 2);
                     $packet->ack = $ack;
                     $packet->setArgs(json_decode($data, true));
                     break;

@@ -361,7 +361,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
     /** {@inheritDoc} */
     public function ack($packet, array $args)
     {
-        list($proto, $data) = $this->createAck($packet, $args);
+        [$proto, $data] = $this->createAck($packet, $args);
 
         return $this->send($proto, $data);
     }

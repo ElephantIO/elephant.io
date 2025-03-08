@@ -101,7 +101,7 @@ class Util
                 trigger_error('You are using a deprecated header format. Please update to the new key-value array format.', E_USER_DEPRECATED);
                 $newHeaders = [];
                 foreach ($headers as $header) {
-                    list($key, $value) = explode(': ', $header, 2);
+                    [$key, $value] = explode(': ', $header, 2);
                     $newHeaders[$key] = $value;
                 }
                 $headers = $newHeaders; // Convert to new format

@@ -124,7 +124,7 @@ class Websocket extends Transport
                  * {@link http://stackoverflow.com/questions/14405751/pack-and-unpack-64-bit-integer}
                  */
                 $data .= $bytes = $this->readBytes(8);
-                list($left, $right) = \array_values(\unpack('N2', $bytes));
+                [$left, $right] = \array_values(\unpack('N2', $bytes));
                 $length = $left << 32 | $right;
                 break;
         }

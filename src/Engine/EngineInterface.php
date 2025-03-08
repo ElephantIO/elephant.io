@@ -94,8 +94,8 @@ interface EngineInterface extends LoggerAwareInterface
      * Acknowledge a packet.
      *
      * @param \ElephantIO\Engine\Packet $packet Packet to acknowledge
-     * @param array $args Acknowledgement data
+     * @param mixed $args Acknowledgement data
      * @return int Number of bytes written
      */
-    public function ack($packet, array $args);
+    public function ack($packet, $args);
 }

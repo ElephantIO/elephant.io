@@ -151,10 +151,10 @@ class Client
      * Acknowledge a packet.
      *
      * @param \ElephantIO\Engine\Packet $packet Packet to acknowledge
-     * @param array $args Acknowledgement data
+     * @param mixed $args Acknowledgement data
      * @return int Number of bytes written
      */
-    public function ack($packet, array $args)
+    public function ack($packet, $args)
     {
         if (null !== $packet->ack) {
             $this->logger->info(sprintf('Acknowledge a packet with id %s', $packet->ack), ['args' => Util::toStr($args)]);

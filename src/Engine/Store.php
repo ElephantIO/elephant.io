@@ -264,6 +264,7 @@ class Store
      */
     public static function create($keyValuePair)
     {
+        // @phpstan-ignore new.static
         $store = new static();
         $store->fromArray($keyValuePair);
 

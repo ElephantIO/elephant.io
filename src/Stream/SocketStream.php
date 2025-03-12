@@ -23,7 +23,7 @@ use RuntimeException;
 class SocketStream extends Stream
 {
     /**
-     * @var resource
+     * @var resource|null
      */
     protected $handle = null;
 
@@ -93,7 +93,7 @@ class SocketStream extends Stream
     /**
      * Read metadata from socket.
      *
-     * @return array
+     * @return array|null
      */
     protected function readMetadata()
     {
@@ -102,6 +102,8 @@ class SocketStream extends Stream
 
             return $this->metadata;
         }
+
+        return null;
     }
 
     /**
@@ -120,6 +122,8 @@ class SocketStream extends Stream
         if ($metadata = $this->readMetadata()) {
             return $metadata['eof'] ? false : true;
         }
+
+        return false;
     }
 
     /**
@@ -186,6 +190,8 @@ class SocketStream extends Stream
 
             return true;
         }
+
+        return false;
     }
 
     /**
@@ -214,6 +220,8 @@ class SocketStream extends Stream
 
             return $data;
         }
+
+        return null;
     }
 
     /**

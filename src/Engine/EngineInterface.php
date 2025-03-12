@@ -37,7 +37,7 @@ interface EngineInterface extends LoggerAwareInterface
     /**
      * Connect to the targeted server.
      *
-     * @return \ElephantIO\Engine\EngineInterface
+     * @return void
      */
     public function connect();
 
@@ -51,7 +51,7 @@ interface EngineInterface extends LoggerAwareInterface
     /**
      * Disconnect from server.
      *
-     * @return \ElephantIO\Engine\EngineInterface
+     * @return void
      */
     public function disconnect();
 
@@ -59,7 +59,7 @@ interface EngineInterface extends LoggerAwareInterface
      * Set socket namespace.
      *
      * @param string $namespace The namespace
-     * @return \ElephantIO\Engine\Packet
+     * @return \ElephantIO\Engine\Packet|null
      */
     public function of($namespace);
 
@@ -96,7 +96,7 @@ interface EngineInterface extends LoggerAwareInterface
      * Drain data from socket.
      *
      * @param float $timeout Timeout in seconds
-     * @return \ElephantIO\Engine\Packet
+     * @return \ElephantIO\Engine\Packet|null
      */
     public function drain($timeout = 0);
 }

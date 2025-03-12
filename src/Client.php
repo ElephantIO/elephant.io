@@ -108,7 +108,7 @@ class Client
      * Emit an event to server.
      *
      * @param string $event Event name
-     * @param array|ElephantIO\Engine\Argument $args Event arguments
+     * @param array|\ElephantIO\Engine\Argument $args Event arguments
      * @param bool $ack Set to true to request acknowledgement
      * @return int|\ElephantIO\Engine\Packet Number of bytes written or acknowledged packet
      */
@@ -123,8 +123,8 @@ class Client
      * Acknowledge a packet.
      *
      * @param \ElephantIO\Engine\Packet $packet Packet to acknowledge
-     * @param array|ElephantIO\Engine\Argument $args Acknowledgement data
-     * @return int Number of bytes written
+     * @param array|\ElephantIO\Engine\Argument $args Acknowledgement data
+     * @return int|null Number of bytes written
      */
     public function ack($packet, $args)
     {
@@ -133,6 +133,8 @@ class Client
 
             return $this->engine->ack($packet, $args);
         }
+
+        return null;
     }
 
     /**

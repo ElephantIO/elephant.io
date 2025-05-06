@@ -65,7 +65,7 @@ class Decoder extends ArrayObject
                             throw new RuntimeException('Unsupported encoding detected!');
                         }
                     } else {
-                        $len = (int) $seq->readUntil(':');
+                        $len = $seq->readUntil(':');
                     }
                     break;
                 case SocketIO::EIO_V1:

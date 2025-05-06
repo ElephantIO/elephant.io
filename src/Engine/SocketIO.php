@@ -413,6 +413,8 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      */
     protected function waitForPacket($matcher, $timeout = 0)
     {
+        $started = microtime(true);
+
         while (true) {
             if ($packet = $this->drain($timeout)) {
                 if ($match = $matcher($packet)) {
@@ -423,6 +425,9 @@ abstract class SocketIO implements EngineInterface, SocketInterface
                 }
             }
             if ($this->_transport()->timedout()) {
+                break;
+            }
+            if ($timeout > 0 && (microtime(true) - $started) >= $timeout) {
                 break;
             }
         }

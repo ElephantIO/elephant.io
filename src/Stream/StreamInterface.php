@@ -68,7 +68,7 @@ interface StreamInterface
      * Read data from underlying stream.
      *
      * @param int $size
-     * @return string
+     * @return string|null
      */
     public function read($size = null);
 

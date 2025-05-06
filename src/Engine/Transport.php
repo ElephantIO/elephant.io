@@ -12,6 +12,8 @@
 
 namespace ElephantIO\Engine;
 
+use ElephantIO\Parser\Polling\Encoder;
+use ElephantIO\Parser\Websocket\Decoder;
 use Psr\Log\LoggerAwareTrait;
 
 /**
@@ -33,7 +35,7 @@ abstract class Transport
     /**
      * Last operation timed out state.
      *
-     * @var bool
+     * @var bool|null
      */
     protected $timedout;
 
@@ -50,9 +52,9 @@ abstract class Transport
     /**
      * Send data.
      *
-     * @param string $data
+     * @param string|Encoder $data
      * @param array $parameters
-     * @return int Number of byte written
+     * @return int|null Number of byte written
      */
     abstract public function send($data, $parameters = []);
 
@@ -61,7 +63,7 @@ abstract class Transport
      *
      * @param int $timeout
      * @param array $parameters
-     * @return string
+     * @return string|null|Decoder
      */
     abstract public function recv($timeout = 0, $parameters = []);
 

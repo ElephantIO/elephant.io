@@ -50,7 +50,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
     /** @var string Normalized namespace without path prefix */
     protected $namespace = '';
 
-    /** @var \ElephantIO\Engine\Session Session information */
+    /** @var \ElephantIO\Engine\Session|null Session information */
     protected $session;
 
     /** @var array Cookies received during handshake */
@@ -59,7 +59,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
     /** @var \ElephantIO\Engine\Option Array of options for the engine */
     protected $options;
 
-    /** @var \ElephantIO\Stream\StreamInterface Resource to the connected stream */
+    /** @var \ElephantIO\Stream\StreamInterface|null Resource to the connected stream */
     protected $stream;
 
     /** @var string Current socket transport */
@@ -140,7 +140,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
     /**
      * Set default options.
      *
-     * @param array $options Default options
+     * @param array $defaults Default options
      */
     protected function setDefaults($defaults)
     {
@@ -314,6 +314,8 @@ abstract class SocketIO implements EngineInterface, SocketInterface
 
             return $this->doChangeNamespace();
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -373,6 +375,8 @@ abstract class SocketIO implements EngineInterface, SocketInterface
 
             return $this->processData($data);
         }
+
+        return null;
     }
 
     /**
@@ -380,7 +384,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      *
      * @param int $proto Protocol type
      * @param string  $data Optional data to be sent
-     * @return int Number of bytes written
+     * @return int|null Number of bytes written
      */
     public function send($proto, $data = null)
     {
@@ -390,6 +394,8 @@ abstract class SocketIO implements EngineInterface, SocketInterface
 
             return $this->_transport()->send($formatted);
         }
+
+        return null;
     }
 
     /**
@@ -413,6 +419,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      */
     protected function waitForPacket($matcher, $timeout = 0)
     {
+        // @phpstan-ignore return.missing
         while (true) {
             if ($packet = $this->drain($timeout)) {
                 if ($match = $matcher($packet)) {
@@ -437,7 +444,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      */
     protected function processData($data)
     {
-        /** @var \ElephantIO\Engine\Packet $result */
+        /** @var \ElephantIO\Engine\Packet|null $result */
         $result = null;
         $packets = (array) $data;
         while (count($packets)) {
@@ -460,10 +467,11 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      * Decode a packet.
      *
      * @param string $data
-     * @return \ElephantIO\Engine\Packet
+     * @return \ElephantIO\Engine\Packet|null
      */
     protected function decodePacket($data)
     {
+        return null;
     }
 
     /**
@@ -498,6 +506,8 @@ abstract class SocketIO implements EngineInterface, SocketInterface
         if ((string) $namespace === $this->namespace || Util::normalizeNamespace($namespace) === $this->namespace) {
             return true;
         }
+
+        return false;
     }
 
     /**
@@ -518,7 +528,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      *
      * @param \ElephantIO\Engine\Packet $packet
      * @param string $event
-     * @return \ElephantIO\Engine\Packet
+     * @return \ElephantIO\Engine\Packet|null
      */
     protected function matchEvent($packet, $event)
     {
@@ -541,7 +551,7 @@ abstract class SocketIO implements EngineInterface, SocketInterface
      * Find matched ack from packet.
      *
      * @param \ElephantIO\Engine\Packet $packet
-     * @return \ElephantIO\Engine\Packet
+     * @return \ElephantIO\Engine\Packet|null
      */
     protected function matchAck($packet)
     {

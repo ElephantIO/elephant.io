@@ -68,6 +68,8 @@ class Version0X extends SocketIO
                 return $found;
             }
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -87,6 +89,8 @@ class Version0X extends SocketIO
                 return $found;
             }
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -141,6 +145,8 @@ class Version0X extends SocketIO
 
             return $packet;
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -228,7 +234,6 @@ class Version0X extends SocketIO
     public function buildQueryParameters($transport)
     {
         $transports = [static::TRANSPORT_POLLING => 'xhr-polling'];
-        $transport = $transport ?? $this->options->transport;
         if (isset($transports[$transport])) {
             $transport = $transports[$transport];
         }

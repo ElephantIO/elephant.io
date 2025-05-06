@@ -233,7 +233,7 @@ class Polling extends Transport
     /**
      * Get response headers.
      *
-     * @return array
+     * @return array|null
      */
     public function getHeaders()
     {
@@ -274,7 +274,7 @@ class Polling extends Transport
      * Get response header.
      *
      * @param string $name Header name
-     * @return string|array
+     * @return string|array|null
      */
     public function getHeader($name)
     {
@@ -285,6 +285,8 @@ class Polling extends Transport
                 }
             }
         }
+
+        return null;
     }
 
     /**
@@ -341,6 +343,8 @@ class Polling extends Transport
         if ($this->getStatusCode() === $code) {
             return $this->bytesWritten;
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -365,5 +369,7 @@ class Polling extends Transport
             return new Decoder((string) $this->getBody(), $this->sio->getOptions()->version,
                 $this->getHeader('Content-Type') === static::MIMETYPE_OCTET_STREAM);
         }
+
+        return null;
     }
 }

@@ -201,7 +201,7 @@ class Util
     /**
      * Get Composer autoloader instance.
      *
-     * @return \Composer\Autoload\ClassLoader
+     * @return \Composer\Autoload\ClassLoader|null
      */
     public static function getComposer()
     {
@@ -215,6 +215,8 @@ class Util
                 }
             }
         }
+
+        return null;
     }
 
     /**

@@ -84,6 +84,8 @@ class Version1X extends SocketIO
                 return $found;
             }
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -142,6 +144,8 @@ class Version1X extends SocketIO
                 return $found;
             }
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -207,6 +211,8 @@ class Version1X extends SocketIO
 
             return $packet;
         }
+
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -352,7 +358,7 @@ class Version1X extends SocketIO
      * value is true, otherwise failed. If the return value is a string, it's
      * indicated an error message.
      *
-     * @param \ElephantIO\Engine\Packet $packet
+     * @param \ElephantIO\Engine\Packet|null $packet
      * @return bool|string
      */
     protected function getConfirmedNamespace($packet)
@@ -367,13 +373,15 @@ class Version1X extends SocketIO
                 }
             }
         }
+
+        return false;
     }
 
     public function buildQueryParameters($transport)
     {
         $parameters = [
             'EIO' => $this->options->version,
-            'transport' => $transport ?? $this->transport,
+            'transport' => $transport,
             't' => Yeast::yeast(),
         ];
         if ($this->session) {

@@ -37,8 +37,8 @@ class SequenceReader
     /**
      * Read a fixed size data or remaining data if size is null.
      *
-     * @param int $size
-     * @return string
+     * @param int|null $size
+     * @return string|null
      */
     public function read($size = 1)
     {
@@ -53,6 +53,8 @@ class SequenceReader
 
             return $result;
         }
+
+        return null;
     }
 
     /**
@@ -77,6 +79,8 @@ class SequenceReader
                 return $result;
             }
         }
+
+        return null;
     }
 
     /**
@@ -97,6 +101,8 @@ class SequenceReader
                 return $result;
             }
         }
+
+        return null;
     }
 
     /**

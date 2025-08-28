@@ -102,4 +102,14 @@ abstract class Payload
 
         return $masked;
     }
+
+    /**
+     * Get payload opcode.
+     *
+     * @return int
+     */
+    public function getOpCode()
+    {
+        return$this->opCode;
+    }
 }

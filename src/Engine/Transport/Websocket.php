@@ -179,13 +179,22 @@ class Websocket extends Transport
      *
      * @param string $data
      * @param int $encoding
+     * @throws \RuntimeException
      * @return \ElephantIO\Parser\Websocket\Encoder
      */
     public function getPayload($data, $encoding = Encoder::OPCODE_TEXT)
     {
+        $maxPayload = $this->sio->getSession() ? $this->sio->getSession()->max_payload :
+            $this->sio->getOptions()->max_payload;
+        if (mb_strlen($data) > $maxPayload) {
+            throw new RuntimeException(sprintf(
+                'Payload is exceed the maximum allowed length of %d!',
+                $maxPayload
+            ));
+        }
+
         $encoder = new Encoder($data, $encoding, true);
-        $encoder->setMaxPayload($this->sio->getSession() ? $this->sio->getSession()->max_payload :
-            $this->sio->getOptions()->max_payload);
+        $encoder->setMaxPayload($maxPayload);
 
         return $encoder;
     }
@@ -195,14 +204,13 @@ class Websocket extends Transport
         if (!$data instanceof Encoder) {
             $data = $this->getPayload($data, isset($parameters['encoding']) ? $parameters['encoding'] : Encoder::OPCODE_TEXT);
         }
-        if (count($fragments = $data->encode()->getFragments()) > 1) {
-            throw new RuntimeException(sprintf(
-                'Payload is exceed the maximum allowed length of %d!',
-                $this->sio->getOptions()->max_payload
-            ));
+        $bytes = 0;
+        $fragments = $data->encode()->getFragments();
+        for ($i = 0; $i < count($fragments); $i++) {
+            $bytes += $this->doWrite($fragments[$i]);
         }
 
-        return $this->doWrite($fragments[0]);
+        return $bytes;
     }
 
     public function recv($timeout = 0, $parameters = [])

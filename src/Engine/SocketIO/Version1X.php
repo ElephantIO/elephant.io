@@ -73,7 +73,7 @@ class Version1X extends SocketIO
                 static::PACKET_BINARY_ACK => 'binary-ack',
             ]
         ];
-        $this->setDefaults(['version' => static::EIO_V2, 'max_payload' => 10e7]);
+        $this->setDefaults(['version' => static::EIO_V2, 'max_payload' => 10e7, 'binary_chunk_size' => 8192]);
     }
 
     protected function matchEvent($packet, $event)
@@ -126,7 +126,8 @@ class Version1X extends SocketIO
                         if ($this->options->version <= static::EIO_V3) {
                             $attachment = pack('C', static::PROTO_MESSAGE) . $attachment;
                         }
-                        $raws[] = $transport->getPayload($attachment, WebsocketEncoder::OPCODE_BINARY);
+                        $raws[] = $transport->getPayload($attachment, WebsocketEncoder::OPCODE_BINARY)
+                            ->setMaxPayload($this->options->binary_chunk_size);
                     }
                     break;
             }

@@ -29,6 +29,7 @@ namespace ElephantIO\Engine;
  * @property bool $cors True to send referer and origin
  * @property bool|string $ua True to send user agent or set user agent string
  * @property int $max_payload Maximum allowable payload length
+ * @property int $binary_chunk_size Binary payload chunk size
  * @property string $stream_factory A custom socket stream class name
  * @author Toha <tohenk@yahoo.com>
  */
@@ -38,6 +39,6 @@ class Option extends Store
     {
         $this->keys = ['auth', 'headers', 'reuse_connection', 'timeout', 'transports', 'transport',
             'version', 'wait', 'persistent', 'binary_as_resource', 'sio_path', 'cors', 'ua',
-            '_max_payload', '_stream_factory'];
+            '_max_payload', '_binary_chunk_size', '_stream_factory'];
     }
 }

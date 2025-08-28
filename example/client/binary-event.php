@@ -17,10 +17,19 @@ $event = 'test-binary';
 
 $logger = setup_logger();
 
+if (false === ($content = file_get_contents(__DIR__ . '/../../test/Websocket/data/payload-100k.txt'))) {
+    echo "Payload file is not found!\n";
+    exit(1);
+}
+if (false === ($payload = fopen('php://memory', 'w+'))) {
+    echo "Unable to create payload resource!\n";
+    exit(1);
+}
 // create binary payload
-$filename = __DIR__ . '/../../test/Websocket/data/payload-7d.txt';
-$payload = fopen($filename, 'rb');
-$bindata = create_resource('1234567890');
+$n = 1;
+for ($i = 0; $i < $n; $i++) {
+    fwrite($payload, $content);
+}
 
 foreach ([
     'websocket' => ['transport' => 'websocket'],
@@ -28,7 +37,7 @@ foreach ([
 ] as $transport => $options) {
     echo sprintf("Sending binary data using %s transport...\n", $transport);
     $client = setup_client($namespace, $logger, $options);
-    $client->emit($event, ['data1' => ['test' => $payload], 'data2' => $bindata]);
+    $client->emit($event, ['data1' => ['test' => $payload]]);
     if (is_object($retval = $client->wait($event))) {
         echo sprintf("Got a reply: %s\n", $retval->inspect());
     }

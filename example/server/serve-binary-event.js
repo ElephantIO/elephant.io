@@ -8,6 +8,8 @@
  * @license   http://www.opensource.org/licenses/MIT-License MIT License
  */
 
+const fs = require('fs');
+const path = require('path');
 const ExampleServer = require('./serve');
 
 /**
@@ -17,6 +19,7 @@ class BinaryEventServer extends ExampleServer {
 
     initialize() {
         this.namespace = 'binary-event';
+        this.providePayload = true;
     }
 
     handle() {
@@ -40,8 +43,22 @@ class BinaryEventServer extends ExampleServer {
                             });
                         }
                     }
-                    f(data);
-                    socket.emit('test-binary', {success: true, time: Buffer.from(new Date().toString()), payload: payload});
+                    if (this.providePayload) {
+                        const payload100k = path.resolve(`${__dirname}/../../test/Websocket/data/payload-100k.txt`);
+                        const buff100k = fs.readFileSync(payload100k);
+                        let buff, n = 10;
+                        for (let i = 0; i < n; i++) {
+                            if (buff) {
+                                buff = Buffer.concat([buff, buff100k]);
+                            } else {
+                                buff = buff100k;
+                            }
+                        }
+                        payload.push(buff);
+                    } else {
+                        f(data);
+                    }
+                    socket.emit('test-binary', {success: true, time: Buffer.from(new Date().toString()), payload});
                 });
         });
         return true;

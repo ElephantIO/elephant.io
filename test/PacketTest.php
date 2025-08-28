@@ -17,7 +17,7 @@ use ElephantIO\Engine\Packet;
 
 class PacketTest extends TestCase
 {
-    public function testPacket()
+    public function testPacket(): void
     {
         /** @var \ElephantIO\Engine\Packet $packet1 */
         $packet1 = Packet::create(['proto' => 1]);

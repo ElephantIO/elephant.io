@@ -17,7 +17,7 @@ use ElephantIO\SequenceReader;
 
 class SequenceReaderTest extends TestCase
 {
-    public function testRead()
+    public function testRead(): void
     {
         $seq = new SequenceReader('1234567890');
 
@@ -31,7 +31,7 @@ class SequenceReaderTest extends TestCase
         $this->assertSame('', $seq->readData(), 'An empty string returned when remanining characters unavailable');
     }
 
-    public function testReadUntil()
+    public function testReadUntil(): void
     {
         $seq = new SequenceReader('1::3');
 
@@ -42,7 +42,7 @@ class SequenceReaderTest extends TestCase
         $this->assertSame('3', $seq->getData(), 'Remaining characters matched');
     }
 
-    public function testReadUntilNoSkip()
+    public function testReadUntilNoSkip(): void
     {
         $seq = new SequenceReader('1,["A",3]');
 
@@ -52,7 +52,7 @@ class SequenceReaderTest extends TestCase
         $this->assertSame(true, $seq->isEof(), 'No more characters');
     }
 
-    public function testReadWithin()
+    public function testReadWithin(): void
     {
         $seq = new SequenceReader('0,["A",2]');
 

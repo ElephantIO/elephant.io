@@ -12,6 +12,8 @@
 
 namespace ElephantIO\Parser\Websocket;
 
+use ElephantIO\StringableInterface;
+
 /**
  * Encode the payload before sending it to a frame.
  *
@@ -21,8 +23,9 @@ namespace ElephantIO\Parser\Websocket;
  *
  * @author Baptiste Clavié <baptiste@wisembly.com>
  */
-class Encoder extends Payload
+class Encoder extends Payload implements StringableInterface
 {
+    /** @var string */
     private $data;
 
     /** @var string */

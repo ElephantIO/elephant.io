@@ -28,12 +28,15 @@ set_error_handler('error_to_exception');
  * @param string $message
  * @param string $filename
  * @param int $line
- * @return void
+ * @return bool
  */
-function error_to_exception($code, $message, $filename, $line) {
+function error_to_exception($code, $message, $filename, $line)
+{
     if (error_reporting() & $code) {
         throw new ErrorException($message, 0, $code, $filename, $line);
     }
+
+    return true;
 }
 
 /**
@@ -45,8 +48,8 @@ function error_to_exception($code, $message, $filename, $line) {
 function client_version($version = null)
 {
     static $client = null;
-    if (null === $client && is_readable($package = __DIR__ . '/../server/package.json')) {
-        $info = json_decode(file_get_contents($package), true);
+    if (null === $client && is_readable($package = __DIR__ . '/../server/package.json') && false !== ($content = file_get_contents($package))) {
+        $info = json_decode($content, true);
         if (isset($info['dependencies']) && isset($info['dependencies']['socket.io'])) {
             if (preg_match('/(?P<MAJOR>(\d+))\.(?P<MINOR>(\d+))\.(?P<PATCH>(\d+))/', $info['dependencies']['socket.io'], $matches)) {
                 $client = (int) $matches['MAJOR'];
@@ -84,9 +87,9 @@ function setup_logger()
 /**
  * Create a socket client.
  *
- * @param string $namespace
- * @param \Monolog\Logger $logger
- * @param array $options
+ * @param string|null $namespace
+ * @param \Monolog\Logger|null $logger
+ * @param array<string, mixed> $options
  * @return \ElephantIO\Client
  */
 function setup_client($namespace, $logger = null, $options = [])
@@ -112,34 +115,9 @@ function setup_client($namespace, $logger = null, $options = [])
 }
 
 /**
- * Truncate a long string from array value.
- *
- * @param array $data
- * @param integer $len
- * @return void
- */
-function truncate_data(&$data, $len = 100)
-{
-    if (is_array($data)) {
-        foreach ($data as $k => &$v) {
-            if (is_array($v)) {
-                truncate_data($v, $len);
-            } elseif (is_string($v)) {
-                if (($n = strlen($v)) > $len) {
-                    $n -= $len;
-                    if ($len > 3) {
-                        $v = Util::truncate($v);
-                    }
-                }
-            }
-        }
-    }
-}
-
-/**
  * Inspect data.
  *
- * @param array $data
+ * @param mixed $data
  * @return string
  */
 function inspect($data)
@@ -151,7 +129,7 @@ function inspect($data)
  * Create a resource from string.
  *
  * @param string $data
- * @return resource
+ * @return resource|null
  */
 function create_resource($data)
 {

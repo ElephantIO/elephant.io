@@ -30,7 +30,7 @@ $data = [
 ];
 echo sprintf("Sending message: %s\n", inspect($data));
 $client->emit($event, $data);
-if ($retval = $client->wait($event)) {
+if (is_object($retval = $client->wait($event))) {
     echo sprintf("Got a reply: %s\n", $retval->inspect());
 }
 $client->disconnect();

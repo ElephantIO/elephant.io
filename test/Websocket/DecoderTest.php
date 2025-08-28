@@ -18,20 +18,36 @@ use ReflectionProperty;
 
 class DecoderTest extends TestCase
 {
-    /** @dataProvider providerUnmaskedPayload */
+    /**
+     * Test with unmasked payload.
+     *
+     * @param string $payload
+     * @param string $expected
+     * @return void
+     * @dataProvider providerUnmaskedPayload
+     */
     public function testUnmaskedPayload($payload, $expected)
     {
-        $decoder = new Decoder(hex2bin($payload));
+        if ($payload = hex2bin($payload)) {
+            $decoder = new Decoder($payload);
 
-        $this->assertSame($expected, (string) $decoder);
+            $this->assertSame($expected, (string) $decoder);
 
-        $this->assertPropSame(0x1, $decoder, 'fin');
-        $this->assertPropSame([0x0, 0x0, 0x0], $decoder, 'rsv');
-        $this->assertPropSame(false, $decoder, 'mask');
-        $this->assertPropSame("\x00\x00\x00\x00", $decoder, 'maskKey');
-        $this->assertPropSame(Decoder::OPCODE_TEXT, $decoder, 'opCode');
+            $this->assertPropSame(0x1, $decoder, 'fin');
+            $this->assertPropSame([0x0, 0x0, 0x0], $decoder, 'rsv');
+            $this->assertPropSame(false, $decoder, 'mask');
+            $this->assertPropSame("\x00\x00\x00\x00", $decoder, 'maskKey');
+            $this->assertPropSame(Decoder::OPCODE_TEXT, $decoder, 'opCode');
+        } else {
+            $this->fail('Payload must be hex encoded!');
+        }
     }
 
+    /**
+     * Provide unmasked payload.
+     *
+     * @return array<int, array<int, string>>
+     */
     public function providerUnmaskedPayload()
     {
         $short = 'foo';
@@ -61,21 +77,33 @@ EOF;
     /**
      * Test with a masked payload (the masked being "?EV!")
      *
+     * @param string $payload
+     * @param string $expected
+     * @return void
      * @dataProvider providerMaskedPayload
      */
     public function testMaskedPayload($payload, $expected)
     {
-        $decoder = new Decoder(hex2bin($payload));
+        if ($payload = hex2bin($payload)) {
+            $decoder = new Decoder($payload);
 
-        $this->assertSame($expected, (string) $decoder);
+            $this->assertSame($expected, (string) $decoder);
 
-        $this->assertPropSame(0x1, $decoder, 'fin');
-        $this->assertPropSame([0x0, 0x0, 0x0], $decoder, 'rsv');
-        $this->assertPropSame(true, $decoder, 'mask');
-        $this->assertPropSame('?EV!', $decoder, 'maskKey');
-        $this->assertPropSame(Decoder::OPCODE_TEXT, $decoder, 'opCode');
+            $this->assertPropSame(0x1, $decoder, 'fin');
+            $this->assertPropSame([0x0, 0x0, 0x0], $decoder, 'rsv');
+            $this->assertPropSame(true, $decoder, 'mask');
+            $this->assertPropSame('?EV!', $decoder, 'maskKey');
+            $this->assertPropSame(Decoder::OPCODE_TEXT, $decoder, 'opCode');
+        } else {
+            $this->fail('Payload must be hex encoded!');
+        }
     }
 
+    /**
+     * Provide masked payload.
+     *
+     * @return array<int, array<int, string>>
+     */
     public function providerMaskedPayload()
     {
         $short = 'foo';
@@ -102,6 +130,14 @@ EOF;
             [$longMask, $this->fixEol($long)]];  // data encoded with > 125 characters but < 65536 characters
     }
 
+    /**
+     * Do property assertion.
+     *
+     * @param int|int[]|string|bool $expected
+     * @param object $object
+     * @param string $property
+     * @return void
+     */
     private function assertPropSame($expected, $object, $property)
     {
         $refl = new ReflectionProperty(Decoder::class, $property);
@@ -110,6 +146,14 @@ EOF;
         $this->assertSame($expected, $refl->getValue($object));
     }
 
+    /**
+     * Fix end of line.
+     *
+     * @param string $str
+     * @param string $from
+     * @param string $to
+     * @return string
+     */
     private function fixEol($str, $from = "\r\n", $to = "\n")
     {
         if (false !== strpos($str, $from)) {

@@ -18,7 +18,7 @@ use InvalidArgumentException;
 
 class StoreTest extends TestCase
 {
-    public function testStore()
+    public function testStore(): void
     {
         /** @var \ElephantIO\Test\TestStore $store */
         $store = TestStore::create([
@@ -47,6 +47,15 @@ class StoreTest extends TestCase
     }
 }
 
+/**
+ * @property string $id
+ * @property int $number
+ * @property bool|null $empty
+ * @property bool|null $disp
+ * @property bool|null $nodisp
+ * @property bool|null $hidden
+ * @property string $somekey
+ */
 class TestStore extends Store
 {
     protected function initialize()
@@ -54,6 +63,11 @@ class TestStore extends Store
         $this->keys = ['+id', 'number', '!empty', '!disp', '!nodisp', '_hidden'];
     }
 
+    /**
+     * Get values.
+     *
+     * @return mixed[]
+     */
     public function getValues()
     {
         return $this->values;

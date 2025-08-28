@@ -19,11 +19,11 @@ $event = 'message';
 $client = setup_client($namespace, null, ['transports' => 'polling']);
 
 $client->emit($event, ['message' => 'This is first message']);
-if ($retval = $client->wait($event)) {
+if (is_object($retval = $client->wait($event))) {
     echo sprintf("Got a reply for first message: %s\n", $retval->inspect());
 }
 $client->emit($event, ['message' => 'Das höchste Gut und Uebel']);
-if ($retval = $client->wait($event)) {
+if (is_object($retval = $client->wait($event))) {
     echo sprintf("Got a reply for second message: %s\n", $retval->inspect());
 }
 $client->disconnect();

@@ -30,6 +30,11 @@ class Session extends Store
         $this->keys = ['id', 'upgrades', 'timeouts', 'max_payload', '_heartbeat'];
     }
 
+    /**
+     * Get current time.
+     *
+     * @return float
+     */
     protected function getTime()
     {
         return \microtime(true);
@@ -88,7 +93,7 @@ class Session extends Store
     /**
      * Create session from array.
      *
-     * @param array $array
+     * @param array<string, mixed> $array
      * @return \ElephantIO\Engine\Session
      */
     public static function from($array)

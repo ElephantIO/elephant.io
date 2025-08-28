@@ -10,10 +10,13 @@ set_error_handler('error_to_exception');
  * @param string $message
  * @param string $filename
  * @param int $line
- * @return void
+ * @return bool
  */
-function error_to_exception($code, $message, $filename, $line) {
+function error_to_exception($code, $message, $filename, $line)
+{
     if (error_reporting() & $code) {
         throw new ErrorException($message, 0, $code, $filename, $line);
     }
+
+    return true;
 }

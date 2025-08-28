@@ -21,7 +21,7 @@ use ReflectionProperty;
 
 class PayloadTest extends TestCase
 {
-    public function testMaskData()
+    public function testMaskData(): void
     {
         $payload = new Payload();
 
@@ -35,27 +35,37 @@ class PayloadTest extends TestCase
         $this->assertSame('592a39', bin2hex($refl->invoke($payload, 'foo')));
     }
 
+    /**
+     * Do encode or decode.
+     *
+     * @param string $sz
+     * @param string $filename
+     * @return void
+     */
     protected function encodeDecode($sz, $filename)
     {
-        $payload = file_get_contents($filename);
-        $encoder = new Encoder($payload, Decoder::OPCODE_TEXT, false);
-        $encoded = (string) $encoder;
-        $decoder = new Decoder($encoded);
-        $decoded = (string) $decoder;
-        $this->assertEquals($payload, $decoded, 'Properly encode and decode payload '.$sz.' content');
+        if ($payload = file_get_contents($filename)) {
+            $encoder = new Encoder($payload, Decoder::OPCODE_TEXT, false);
+            $encoded = (string) $encoder;
+            $decoder = new Decoder($encoded);
+            $decoded = (string) $decoder;
+            $this->assertEquals($payload, $decoded, 'Properly encode and decode payload '.$sz.' content');
+        } else {
+            $this->fail(sprintf('Unable to load payload %s!', $filename));
+        }
     }
 
-    public function testPayload7D()
+    public function testPayload7D(): void
     {
         $this->encodeDecode('125-bytes', __DIR__.'/data/payload-7d.txt');
     }
 
-    public function testPayloadFFFF()
+    public function testPayloadFFFF(): void
     {
         $this->encodeDecode('64-kilobytes', __DIR__.'/data/payload-ffff.txt');
     }
 
-    public function testPayloadAboveFFFF()
+    public function testPayloadAboveFFFF(): void
     {
         $this->encodeDecode('100-kilobytes', __DIR__.'/data/payload-100k.txt');
     }

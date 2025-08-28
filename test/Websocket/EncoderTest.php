@@ -19,7 +19,14 @@ use ReflectionProperty;
 
 class EncoderTest extends TestCase
 {
-    /** @dataProvider providerShortPayload */
+    /**
+     * Test with sort payload.
+     *
+     * @param string|null $maskKey
+     * @param string $expected
+     * @return void
+     * @dataProvider providerShortPayload
+     */
     public function testShortPayload($maskKey, $expected)
     {
         $encoder = new Encoder('foo', Encoder::OPCODE_TEXT, null !== $maskKey);
@@ -33,6 +40,11 @@ class EncoderTest extends TestCase
         $this->assertSame($expected, bin2hex((string) $encoder));
     }
 
+    /**
+     * Provide short payload.
+     *
+     * @return array<int, array<int, string|null>>
+     */
     public function providerShortPayload()
     {
         return [[null, '8103666f6f'],
@@ -42,6 +54,9 @@ class EncoderTest extends TestCase
     /**
      * Test with a payload > 125 characters but < 65536
      *
+     * @param string|null $maskKey
+     * @param string $expected
+     * @return void
      * @dataProvider providerLongPayload
      */
     public function testLongPayload($maskKey, $expected)
@@ -64,6 +79,11 @@ EOF;
         $this->assertSame($expected, bin2hex((string) $encoder));
     }
 
+    /**
+     * Provide long payload.
+     *
+     * @return array<int, array<int, string|null>>
+     */
     public function providerLongPayload()
     {
         $noMask = '817e010b54686973207061796c6f6164206c656e677468206973206f76'
@@ -92,6 +112,14 @@ EOF;
             ['?EV!', $withMask]];
     }
 
+    /**
+     * Fix end of line.
+     *
+     * @param string $str
+     * @param string $from
+     * @param string $to
+     * @return string
+     */
     private function fixEol($str, $from = "\r\n", $to = "\n")
     {
         if (false !== strpos($str, $from)) {

@@ -25,14 +25,14 @@ while (true) {
     if (null === $sent) {
         $sent = $now;
         $client->emit($event, ['message' => 'A message']);
-        if ($retval = $client->wait($event)) {
+        if (is_object($retval = $client->wait($event))) {
             echo sprintf("Got a reply for first message: %s\n", $retval->inspect());
         }
         continue;
     }
     if ($now - $start >= $timeout) {
         $client->emit($event, ['message' => 'Last message']);
-        if ($retval = $client->wait($event)) {
+        if (is_object($retval = $client->wait($event))) {
             echo sprintf("\nGot a reply for last message: %s\n", $retval->inspect());
         }
         break;

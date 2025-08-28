@@ -29,7 +29,7 @@ foreach ([
     echo sprintf("Sending binary data using %s transport...\n", $transport);
     $client = setup_client($namespace, $logger, $options);
     $client->emit($event, ['data1' => ['test' => $payload], 'data2' => $bindata]);
-    if ($retval = $client->wait($event)) {
+    if (is_object($retval = $client->wait($event))) {
         echo sprintf("Got a reply: %s\n", $retval->inspect());
     }
     $client->disconnect();

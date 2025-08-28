@@ -17,7 +17,7 @@ use ElephantIO\Util;
 
 class UtilTest extends TestCase
 {
-    public function testToStr()
+    public function testToStr(): void
     {
         $values = [
             'string' => 'The string',
@@ -30,7 +30,7 @@ class UtilTest extends TestCase
             Util::toStr($values), 'Util can represents the values as string');
     }
 
-    public function testToStrWithEnum()
+    public function testToStrWithEnum(): void
     {
         if (version_compare(PHP_VERSION, '8.1.0', '>=')) {
             require_once 'TestEnum.php';
@@ -57,5 +57,6 @@ class Stringable
 
 class NotStringable
 {
+    /** @var float */
     public $test = 1001.1;
 }

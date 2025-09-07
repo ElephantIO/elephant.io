@@ -33,6 +33,7 @@
         }
     ],
     "scripts": {
+        "analyze": "phpstan analyze -l 8 src test example",
         "test": "phpunit"
     },
     "require": {

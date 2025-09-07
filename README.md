@@ -10,8 +10,8 @@
       .-~   ~--"~-.   ._ "-.     Its goal is to ease the communications between your
      /      ./_    Y    "-. \    PHP application and a socket.io server.
     Y       :~     !         Y
-    lq p    |     /         .|   Requires PHP 7.4 and openssl, licensed under
- _   \. .-, l    /          |j   the MIT License
+    lq p    |     /         .|   Requires PHP 7.4+ and mbstring extension,
+ _   \. .-, l    /          |j   licensed under the MIT License
 ()\___) |/   \_/";          !
  \._____.-~\  .  ~\.      ./
             Y_ Y_. "vr"~  T      Built-in engines:

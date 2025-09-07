@@ -46,7 +46,7 @@ class Encoder extends Payload implements StringableInterface
         $this->mask = (bool) $mask;
 
         if (true === $this->mask) {
-            $this->maskKey = openssl_random_pseudo_bytes(4);
+            $this->maskKey = random_bytes(4);
         }
     }
 

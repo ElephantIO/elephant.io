@@ -104,6 +104,10 @@ authentication token, or providing stream context.
   content, it is necessary to seek the stream to the begining using `fseek($handle, 0)`
   first. 
 
+* `binary_chunk_size` _(socket.io 1+)_
+
+  Set the maximum chunk size when sending binary data to the server. Default to `8192`.
+
 * `context`
 
   A [stream context](https://www.php.net/manual/en/context.php) options for the socket stream

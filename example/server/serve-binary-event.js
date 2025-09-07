@@ -19,7 +19,6 @@ class BinaryEventServer extends ExampleServer {
 
     initialize() {
         this.namespace = 'binary-event';
-        this.providePayload = true;
     }
 
     handle() {
@@ -29,36 +28,33 @@ class BinaryEventServer extends ExampleServer {
                 .on('disconnect', () => {
                     this.log('disconnected: %s', socket.id);
                 })
+                .on('test-binary-attachment', data => {
+                    const res = {success: false};
+                    if (data.hash && data.content) {
+                        if (this.attachments === undefined) {
+                            this.attachments = {};
+                        }
+                        let buff = Buffer.from(data.content);
+                        if (this.attachments[data.hash] !== undefined) {
+                            buff = Buffer.concat([this.attachments[data.hash], buff]);
+                        }
+                        this.attachments[data.hash] = buff;
+                        res.success = true;
+                        res.length = buff.byteLength;
+                        this.log('attachment %s: part %s (%d bytes)...', socket.id, data.hash, res.length);
+                    }
+                    socket.emit('test-binary-attachment', res);
+                })
                 .on('test-binary', data => {
                     this.log('receive data: %s', data);
-                    const payload = [];
-                    const f = function(p) {
-                        if (typeof p === 'object') {
-                            Object.keys(p).forEach(k => {
-                                if (p[k] instanceof Buffer) {
-                                    payload.push(p[k]);
-                                } else if (typeof p[k] === 'object' && p[k].constructor.name === 'Object') {
-                                    f(p[k]);
-                                }
-                            });
-                        }
+                    const res = {success: false};
+                    if (data.hash && this.attachments !== undefined && this.attachments[data.hash]) {
+                        // send back attachment to client
+                        res.success = true;
+                        res.time = Buffer.from(new Date().toString());
+                        res.payload = this.attachments[data.hash];
                     }
-                    if (this.providePayload) {
-                        const payload100k = path.resolve(`${__dirname}/../../test/Websocket/data/payload-100k.txt`);
-                        const buff100k = fs.readFileSync(payload100k);
-                        let buff, n = 10;
-                        for (let i = 0; i < n; i++) {
-                            if (buff) {
-                                buff = Buffer.concat([buff, buff100k]);
-                            } else {
-                                buff = buff100k;
-                            }
-                        }
-                        payload.push(buff);
-                    } else {
-                        f(data);
-                    }
-                    socket.emit('test-binary', {success: true, time: Buffer.from(new Date().toString()), payload});
+                    socket.emit('test-binary', res);
                 });
         });
         return true;

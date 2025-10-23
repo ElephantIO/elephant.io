@@ -19,7 +19,7 @@ namespace ElephantIO\Engine;
  * @property float $heartbeat Last heartbeat time
  * @property float[] $timeouts Ping timeout and interval
  * @property string[] $upgrades Upgradable transports
- * @property int $max_payload Maximum payload length
+ * @property ?int $max_payload Maximum payload length
  * @author Baptiste Clavié <baptiste@wisembly.com>
  * @author Toha <tohenk@yahoo.com>
  */

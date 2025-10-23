@@ -184,8 +184,8 @@ class Websocket extends Transport
      */
     public function getPayload($data, $encoding = Encoder::OPCODE_TEXT)
     {
-        $maxPayload = $this->sio->getSession() ? $this->sio->getSession()->max_payload :
-            $this->sio->getOptions()->max_payload;
+        $maxPayload = $this->sio->getSession() && $this->sio->getSession()->max_payload ?
+            $this->sio->getSession()->max_payload : $this->sio->getOptions()->max_payload;
         if (mb_strlen($data) > $maxPayload) {
             throw new RuntimeException(sprintf(
                 'Payload is exceed the maximum allowed length of %d!',

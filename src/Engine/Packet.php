@@ -19,7 +19,7 @@ namespace ElephantIO\Engine;
  * @property int $type Message type
  * @property ?string $nsp Namespace
  * @property string $event Event name
- * @property int $ack Acknowledgement id
+ * @property ?int $ack Acknowledgement id
  * @property array<int|string, mixed> $args Event arguments
  * @property mixed $data Packet data
  * @property int $count Binary attachment count

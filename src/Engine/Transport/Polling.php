@@ -28,7 +28,7 @@ class Polling extends Transport
 {
     public const MIMETYPE_OCTET_STREAM = 'application/octet-stream';
     public const MIMETYPE_JSON = 'application/json';
-    public const MIMETYPE_PLAIN_TEXT = 'text/plain; charset=UTF-8';
+    public const MIMETYPE_PLAIN_TEXT = 'text/plain';
 
     /**
      * @var ?array<tring, mixed>
@@ -104,20 +104,30 @@ class Polling extends Transport
             $timeout = isset($options['timeout']) ? $options['timeout'] : 0;
             $skip_body = isset($options['skip_body']) ? $options['skip_body'] : false;
             $payload = isset($options['payload']) ? $options['payload'] : null;
+            $encoding = isset($options['encoding']) ? $options['encoding'] : 'UTF-8';
 
             if ($payload) {
+                $charset = null;
                 $contentType = $headers['Content-Type'] ?? null;
                 if (null === $contentType) {
                     if (false !== strpos($payload, "\x00")) {
                         $contentType = static::MIMETYPE_OCTET_STREAM;
                     } else {
                         $contentType = static::MIMETYPE_PLAIN_TEXT;
-                        $payload = mb_convert_encoding($payload, 'UTF-8', 'ISO-8859-1');
+                        $charset = $encoding;
+                        $payload = mb_convert_encoding($payload, $charset, 'ISO-8859-1');
                     }
                 }
                 if ($contentType) {
+                    if ($charset) {
+                        if (false !== stripos($contentType, 'charset')) {
+                            $charset = null;
+                        } else {
+                            $charset = sprintf('charset=%s', $charset);
+                        }
+                    }
                     $headers = array_merge([
-                        'Content-Type' => $contentType,
+                        'Content-Type' => implode('; ', array_filter([$contentType, $charset])),
                         'Content-Length' => strlen($payload),
                     ], $headers);
                 }

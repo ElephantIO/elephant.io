@@ -92,6 +92,16 @@ class Client
     }
 
     /**
+     * Check if connected to server.
+     *
+     * @return bool
+     */
+    public function isConnected()
+    {
+        return $this->engine->connected();
+    }
+
+    /**
      * Set socket namespace.
      *
      * @param string $namespace The namespace

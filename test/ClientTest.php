@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * This file is part of the Elephant.io package
+ *
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ *
+ * @copyright Wisembly
+ * @license   http://www.opensource.org/licenses/MIT-License MIT License
+ */
+
 namespace ElephantIO\Test;
 
 use ElephantIO\Client;
@@ -8,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
 {
-    public function testIsConnectedDelegatesToEngine()
+    public function testIsConnectedDelegatesToEngine(): void
     {
         $engine = $this->createMock(EngineInterface::class);
         $engine->expects($this->any())
@@ -19,7 +29,7 @@ class ClientTest extends TestCase
         $this->assertTrue($client->isConnected());
     }
 
-    public function testIsConnectedReturnsFalseWhenEngineIsNotConnected()
+    public function testIsConnectedReturnsFalseWhenEngineIsNotConnected(): void
     {
         $engine = $this->createMock(EngineInterface::class);
         $engine->expects($this->any())

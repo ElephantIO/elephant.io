@@ -26,6 +26,11 @@ Search.appendIndex(
             "summary": "Disconnect\u0020from\u0020server.",
             "url": "classes/ElephantIO-Client.html#method_disconnect"
         },                {
+            "fqsen": "\\ElephantIO\\Client\u003A\u003AisConnected\u0028\u0029",
+            "name": "isConnected",
+            "summary": "Check\u0020if\u0020connected\u0020to\u0020server.",
+            "url": "classes/ElephantIO-Client.html#method_isConnected"
+        },                {
             "fqsen": "\\ElephantIO\\Client\u003A\u003Aof\u0028\u0029",
             "name": "of",
             "summary": "Set\u0020socket\u0020namespace.",

@@ -71,7 +71,7 @@ class Decoder extends ArrayObject implements StringableInterface
                             throw new RuntimeException('Unsupported encoding detected!');
                         }
                     } else {
-                        $len = (int) $seq->readUntil(':');
+                        $len = $seq->readUntil(':');
                     }
                     break;
                 case SocketIO::EIO_V1:

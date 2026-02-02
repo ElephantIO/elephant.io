@@ -23,9 +23,10 @@ jobs:
           - "8.2"
           - "8.3"
           - "8.4"
+          - "8.5"
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Install PHP
       uses: shivammathur/setup-php@v2
@@ -34,7 +35,7 @@ jobs:
         ini-values: error_reporting=E_ALL
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         cache: 'npm'
         cache-dependency-path: 'example/server/package-lock.json'
@@ -44,7 +45,7 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}

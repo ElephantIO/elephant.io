@@ -27,11 +27,15 @@ class PayloadTest extends TestCase
         $payload = new Payload();
 
         $refl = new ReflectionProperty(Payload::class, 'maskKey');
-        $refl->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $refl->setAccessible(true);
+        }
         $refl->setValue($payload, '?EV!');
 
         $refl = new ReflectionMethod(Payload::class, 'maskData');
-        $refl->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $refl->setAccessible(true);
+        }
 
         $this->assertSame('592a39', bin2hex($refl->invoke($payload, 'foo')));
     }

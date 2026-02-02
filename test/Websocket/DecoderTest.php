@@ -142,7 +142,9 @@ EOF;
     private function assertPropSame($expected, $object, $property)
     {
         $refl = new ReflectionProperty(Decoder::class, $property);
-        $refl->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $refl->setAccessible(true);
+        }
 
         $this->assertSame($expected, $refl->getValue($object));
     }

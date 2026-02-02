@@ -34,7 +34,9 @@ class EncoderTest extends TestCase
 
         if (null !== $maskKey) {
             $refl = new ReflectionProperty(Payload::class, 'maskKey');
-            $refl->setAccessible(true);
+            if (PHP_VERSION_ID < 80100) {
+                $refl->setAccessible(true);
+            }
             $refl->setValue($encoder, $maskKey);
         }
 
@@ -73,7 +75,9 @@ EOF;
 
         if (null !== $maskKey) {
             $refl = new ReflectionProperty(Payload::class, 'maskKey');
-            $refl->setAccessible(true);
+            if (PHP_VERSION_ID < 80100) {
+                $refl->setAccessible(true);
+            }
             $refl->setValue($encoder, $maskKey);
         }
 
